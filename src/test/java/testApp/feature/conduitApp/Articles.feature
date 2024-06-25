@@ -5,14 +5,36 @@ Feature: Articles
     
     Scenario: Create a new article
         And path 'articles'
-        And request {"article":{"title":"testing!","description":"testing!","body":"bla bla bla!","tagList":["bla"]}}
+        And request 
+        """
+            {
+                "article": {
+                    "title":"testing....!",
+                    "description":"testing!",
+                    "body":"bla bla bla!",
+                    "tagList":["bla"]
+                }
+            }
+        """
+        
         When method POST
         Then status 201
-        And match response.article.title == 'testing!'
+        And match response.article.title == 'testing....!'
     
     Scenario: Create and Delete article       
             And path 'articles'
-            And request {"article":{"title":"testing...","description":"testing...","body":"bla bla bla 5","tagList":["bla"]}}
+            And request 
+            """
+                {
+                    "article": {
+                        "title":"testing...",
+                        "description":"testing...",
+                        "body":"bla bla bla 5",
+                        "tagList":["bla"]
+                    }
+                }
+            """
+            
             When method POST
             Then status 201
             And match response.article.title == 'testing...'
