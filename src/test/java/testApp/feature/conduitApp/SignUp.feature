@@ -1,21 +1,37 @@
-@ignore
+
 Feature: Sign Up new user
     
     Background: preconditions
+        * def dataGenerator = Java.type('helpers.DataGenerator')
         Given url conduitBaseUrl
 
     Scenario: Sign Up new user
-    Given def userData = { "email": "teste150@test.com", "username": "test150a" }
+        * def randomEmail = dataGenerator.getRandomEmail()
+        * def randomUsername = dataGenerator.getRandomUsername()
+        * def randomPassword = dataGenerator.getRandomPassword()
         Given path 'users'
         And request 
         """
             {
                 "user":{
-                    "email": #(userData.email),
-                    "password": "test.tes123",
-                    "username": #(userData.username)
+                    "email": #(randomEmail),
+                    "password": #(randomPassword),
+                    "username": #(randomUsername)
                 }
             }
         """
         When method Post
         Then status 201
+        And match response == 
+        """
+            {
+                "user": {
+                    "id": "#number",
+                    "email": #(randomEmail),
+                    "username": #(randomUsername),
+                    "bio": "##string",
+                    "image":"#string",
+                    "token":"#string"
+                }
+            }
+        """
