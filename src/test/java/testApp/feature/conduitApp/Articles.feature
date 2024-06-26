@@ -1,49 +1,33 @@
 Feature: Articles 
 
     Background: Define URL
-        Given url conduitBaseUrl
-    
+        * url conduitBaseUrl
+        * def articleRequestBody = read('classpath:testApp/json/newArticleRequest.json')
+        * def dataGenerator = Java.type('helpers.DataGenerator')
+        * set articleRequestBody.article.title = dataGenerator.getRandomArticleValues().title
+        * set articleRequestBody.article.description = dataGenerator.getRandomArticleValues().description
+        * set articleRequestBody.article.body = dataGenerator.getRandomArticleValues().body
+
     Scenario: Create a new article
         And path 'articles'
-        And request 
-        """
-            {
-                "article": {
-                    "title":"testing....!",
-                    "description":"testing!",
-                    "body":"bla bla bla!",
-                    "tagList":["bla"]
-                }
-            }
-        """
-        
+        And request articleRequestBody
         When method POST
         Then status 201
-        And match response.article.title == 'testing....!'
+        And match response.article.title == articleRequestBody.article.title
     
     Scenario: Create and Delete article       
             And path 'articles'
-            And request 
-            """
-                {
-                    "article": {
-                        "title":"testing...",
-                        "description":"testing...",
-                        "body":"bla bla bla 5",
-                        "tagList":["bla"]
-                    }
-                }
-            """
+            And request articleRequestBody
             
             When method POST
             Then status 201
-            And match response.article.title == 'testing...'
+            And match response.article.title == articleRequestBody.article.title
             And def articleId = response.article.slug // save article id to a variable
             
             Given path 'articles', articleId
             When method Get
             Then status 200
-            And match response.article.title == 'testing...'
+            And match response.article.title == articleRequestBody.article.title
 
             And path 'articles', articleId
             When method DELETE
