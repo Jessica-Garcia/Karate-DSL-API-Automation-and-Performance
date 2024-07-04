@@ -10,6 +10,7 @@ function fn() {
   if (env == 'dev') {
     config.conduitUserEmail = 'jess@test.com';
     config.conduitUserPassword = 'KarateTest-123';
+    config.conduitUsername = 'Jess';
   }
   if (env == 'qa') {
     // customize
